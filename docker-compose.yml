@@ -1,0 +1,45 @@
+version: '3.6'
+
+services:
+
+  node:
+    build:
+      context: ./services/node
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/node:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - 3001:3001
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+#    depends_on:
+#     - db-service
+
+  client:
+    build:
+      context: ./services/client
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/client:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - 3007:3000
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
+    depends_on:
+      - node
+
+  nginx:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile-dev
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - node
+      - client

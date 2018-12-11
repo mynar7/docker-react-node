@@ -1,0 +1,43 @@
+version: '3.6'
+
+services:
+
+  node-prod:
+    build:
+      context: ./services/node
+      dockerfile: Dockerfile-prod
+    volumes:
+      - './services/node:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    ports:
+      - 3001:3001
+    environment:
+      - NODE_ENV=production
+#    depends_on:
+#     - db-service
+
+  client-prod:
+    build:
+      context: ./services/client
+      dockerfile: Dockerfile-prod
+    volumes:
+      - './services/client:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    expose:
+      - 80
+    environment:
+      - NODE_ENV=production
+#      - REACT_APP_API_URL=${REACT_APP_API_URL}
+    depends_on:
+      - node-prod
+
+  nginx-prod:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile-prod
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - node-prod
+      - client-prod
