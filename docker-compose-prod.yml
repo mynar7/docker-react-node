@@ -9,8 +9,8 @@ services:
     volumes:
       - './services/node:/usr/src/app'
       - '/usr/src/app/node_modules'
-    ports:
-      - 3001:3001
+#    ports:
+#      - 3001:3001
     environment:
       - NODE_ENV=production
 #    depends_on:
@@ -20,11 +20,11 @@ services:
     build:
       context: ./services/client
       dockerfile: Dockerfile-prod
-    volumes:
-      - './services/client:/usr/src/app'
-      - '/usr/src/app/node_modules'
-    expose:
-      - 80
+#    volumes:
+#      - './services/client/:/usr/src/app'
+#      - '/usr/src/app/node_modules'
+#    expose:
+#      - 80
     environment:
       - NODE_ENV=production
 #      - REACT_APP_API_URL=${REACT_APP_API_URL}

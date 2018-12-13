@@ -9,13 +9,19 @@ services:
     volumes:
       - './services/node:/usr/src/app'
       - '/usr/src/app/node_modules'
-    ports:
-      - 3001:3001
+#    ports:
+#      - 3001:3001
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
-#    depends_on:
-#     - db-service
+    depends_on:
+     - postgres
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_DB: root
 
   client:
     build:
@@ -24,8 +30,8 @@ services:
     volumes:
       - './services/client:/usr/src/app'
       - '/usr/src/app/node_modules'
-    ports:
-      - 3007:3000
+#    ports:
+#      - 3000:3000
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
